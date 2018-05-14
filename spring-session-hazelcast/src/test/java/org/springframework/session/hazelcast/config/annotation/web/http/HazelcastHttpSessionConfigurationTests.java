@@ -16,6 +16,7 @@
 
 package org.springframework.session.hazelcast.config.annotation.web.http;
 
+import com.hazelcast.config.Config;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
 import org.junit.After;
@@ -232,6 +233,10 @@ public class HazelcastHttpSessionConfigurationTests {
 			HazelcastInstance hazelcastInstance = mock(HazelcastInstance.class);
 			given(hazelcastInstance.getMap(anyString()))
 					.willReturn(defaultHazelcastInstanceSessions);
+
+			Config config = mock(Config.class);
+			given(hazelcastInstance.getConfig())
+					.willReturn(config);
 			return hazelcastInstance;
 		}
 
@@ -301,6 +306,10 @@ public class HazelcastHttpSessionConfigurationTests {
 			HazelcastInstance hazelcastInstance = mock(HazelcastInstance.class);
 			given(hazelcastInstance.getMap(anyString()))
 					.willReturn(qualifiedHazelcastInstanceSessions);
+
+			Config config = mock(Config.class);
+			given(hazelcastInstance.getConfig())
+					.willReturn(config);
 			return hazelcastInstance;
 		}
 
@@ -319,6 +328,10 @@ public class HazelcastHttpSessionConfigurationTests {
 			HazelcastInstance hazelcastInstance = mock(HazelcastInstance.class);
 			given(hazelcastInstance.getMap(anyString()))
 					.willReturn(primaryHazelcastInstanceSessions);
+
+			Config config = mock(Config.class);
+			given(hazelcastInstance.getConfig())
+					.willReturn(config);
 			return hazelcastInstance;
 		}
 
@@ -341,6 +354,10 @@ public class HazelcastHttpSessionConfigurationTests {
 			HazelcastInstance hazelcastInstance = mock(HazelcastInstance.class);
 			given(hazelcastInstance.getMap(anyString()))
 					.willReturn(qualifiedHazelcastInstanceSessions);
+
+			Config config = mock(Config.class);
+			given(hazelcastInstance.getConfig())
+					.willReturn(config);
 			return hazelcastInstance;
 		}
 
@@ -367,6 +384,10 @@ public class HazelcastHttpSessionConfigurationTests {
 			HazelcastInstance hazelcastInstance = mock(HazelcastInstance.class);
 			given(hazelcastInstance.getMap(anyString()))
 					.willReturn(hazelcastInstanceSessions);
+
+			Config config = mock(Config.class);
+			given(hazelcastInstance.getConfig())
+					.willReturn(config);
 			return hazelcastInstance;
 		}
 

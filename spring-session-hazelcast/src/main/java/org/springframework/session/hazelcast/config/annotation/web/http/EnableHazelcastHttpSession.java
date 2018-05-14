@@ -85,6 +85,8 @@ public @interface EnableHazelcastHttpSession {
 	 */
 	String sessionMapName() default HazelcastSessionRepository.DEFAULT_SESSION_MAP_NAME;
 
+	boolean configureMap() default true;
+
 	/**
 	 * Flush mode for the Hazelcast sessions. The default is {@code ON_SAVE} which only
 	 * updates the backing Hazelcast when {@link SessionRepository#save(Session)} is

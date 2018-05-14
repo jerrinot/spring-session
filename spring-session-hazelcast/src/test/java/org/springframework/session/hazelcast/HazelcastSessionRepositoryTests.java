@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import com.hazelcast.config.Config;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
 import com.hazelcast.map.EntryProcessor;
@@ -65,6 +66,7 @@ public class HazelcastSessionRepositoryTests {
 
 	@SuppressWarnings("unchecked")
 	private IMap<String, MapSession> sessions = mock(IMap.class);
+	private Config config = mock(Config.class);
 
 	private HazelcastSessionRepository repository;
 
@@ -72,6 +74,8 @@ public class HazelcastSessionRepositoryTests {
 	public void setUp() {
 		given(this.hazelcastInstance.<String, MapSession>getMap(anyString()))
 				.willReturn(this.sessions);
+		given(this.hazelcastInstance.getConfig())
+				.willReturn(this.config);
 		this.repository = new HazelcastSessionRepository(this.hazelcastInstance);
 		this.repository.init();
 	}

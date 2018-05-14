@@ -169,7 +169,7 @@ public class EnableHazelcastHttpSessionEventsTests<S extends Session> {
 	}
 
 	@Configuration
-	@EnableHazelcastHttpSession(maxInactiveIntervalInSeconds = MAX_INACTIVE_INTERVAL_IN_SECONDS)
+	@EnableHazelcastHttpSession(maxInactiveIntervalInSeconds = MAX_INACTIVE_INTERVAL_IN_SECONDS, configureMap = false)
 	static class HazelcastSessionConfig {
 
 		@Bean

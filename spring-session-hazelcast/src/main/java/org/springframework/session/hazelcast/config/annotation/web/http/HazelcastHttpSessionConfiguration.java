@@ -56,6 +56,8 @@ public class HazelcastHttpSessionConfiguration extends SpringHttpSessionConfigur
 
 	private HazelcastFlushMode hazelcastFlushMode = HazelcastFlushMode.ON_SAVE;
 
+	private boolean configureMap = HazelcastSessionRepository.DEFAULT_CONFIGURE_MAP;
+
 	private HazelcastInstance hazelcastInstance;
 
 	private ApplicationEventPublisher applicationEventPublisher;
@@ -71,6 +73,7 @@ public class HazelcastHttpSessionConfiguration extends SpringHttpSessionConfigur
 		sessionRepository
 				.setDefaultMaxInactiveInterval(this.maxInactiveIntervalInSeconds);
 		sessionRepository.setHazelcastFlushMode(this.hazelcastFlushMode);
+		sessionRepository.setConfigureMap(this.configureMap);
 		return sessionRepository;
 	}
 
@@ -116,6 +119,7 @@ public class HazelcastHttpSessionConfiguration extends SpringHttpSessionConfigur
 			this.sessionMapName = sessionMapNameValue;
 		}
 		this.hazelcastFlushMode = attributes.getEnum("hazelcastFlushMode");
+		this.configureMap = attributes.getBoolean("configureMap");
 	}
 
 }

@@ -28,6 +28,10 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+import com.hazelcast.config.ConfigurationException;
+import com.hazelcast.config.MapAttributeConfig;
+import com.hazelcast.config.MapConfig;
+import com.hazelcast.config.MapIndexConfig;
 import com.hazelcast.core.EntryEvent;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
@@ -118,6 +122,12 @@ public class HazelcastSessionRepository implements
 	public static final String DEFAULT_SESSION_MAP_NAME = "spring:session:sessions";
 
 	/**
+	 * TODO: TBD.
+	 *
+	 */
+	public static final boolean DEFAULT_CONFIGURE_MAP = true;
+
+	/**
 	 * The principal name custom attribute name.
 	 */
 	public static final String PRINCIPAL_NAME_ATTRIBUTE = "principalName";
@@ -151,6 +161,7 @@ public class HazelcastSessionRepository implements
 	private IMap<String, MapSession> sessions;
 
 	private String sessionListenerId;
+	private boolean configureMap;
 
 	public HazelcastSessionRepository(HazelcastInstance hazelcastInstance) {
 		Assert.notNull(hazelcastInstance, "HazelcastInstance must not be null");
@@ -159,8 +170,32 @@ public class HazelcastSessionRepository implements
 
 	@PostConstruct
 	public void init() {
+		if (this.configureMap) {
+			configureMap();
+		}
+
 		this.sessions = this.hazelcastInstance.getMap(this.sessionMapName);
 		this.sessionListenerId = this.sessions.addEntryListener(this, true);
+	}
+
+	private void configureMap() {
+		MapAttributeConfig attributeConfig = new MapAttributeConfig()
+				.setName(HazelcastSessionRepository.PRINCIPAL_NAME_ATTRIBUTE)
+				.setExtractor(PrincipalNameExtractor.class.getName());
+
+		MapConfig mapConfig = new MapConfig(this.sessionMapName);
+		mapConfig.addMapAttributeConfig(attributeConfig);
+		mapConfig.addMapIndexConfig(new MapIndexConfig(
+				HazelcastSessionRepository.PRINCIPAL_NAME_ATTRIBUTE, false));
+
+		try {
+			this.hazelcastInstance.getConfig().addMapConfig(mapConfig);
+		}
+		catch (ConfigurationException e) {
+			throw new IllegalStateException("Hazelcast Session Repository was configured to " +
+					"automatically add a map configuration for a map " + this.sessionMapName + ", but " +
+					"this map already has an incompatible configuration", e);
+		}
 	}
 
 	@PreDestroy
@@ -297,6 +332,10 @@ public class HazelcastSessionRepository implements
 		}
 		this.eventPublisher
 				.publishEvent(new SessionDeletedEvent(this, event.getOldValue()));
+	}
+
+	public void setConfigureMap(boolean configureMap) {
+		this.configureMap = configureMap;
 	}
 
 	/**
